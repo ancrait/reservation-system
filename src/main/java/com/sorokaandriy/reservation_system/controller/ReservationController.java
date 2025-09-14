@@ -1,6 +1,7 @@
 package com.sorokaandriy.reservation_system.controller;
 
 import com.sorokaandriy.reservation_system.dto.Reservation;
+import com.sorokaandriy.reservation_system.dto.ReservationStatus;
 import com.sorokaandriy.reservation_system.service.ReservationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,11 +54,11 @@ public class ReservationController {
 
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+    @DeleteMapping("/{id}/cancel")
+    public ResponseEntity<Void> cancelReservation(@PathVariable Long id) {
         try {
             log.info("Called method deleteReservation()");
-            reservationService.deleteReservation(id);
+            reservationService.cancelReservation(id, ReservationStatus.CANCELED);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(404).build();

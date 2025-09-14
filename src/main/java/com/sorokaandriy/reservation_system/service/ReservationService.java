@@ -6,6 +6,7 @@ import com.sorokaandriy.reservation_system.dto.ReservationStatus;
 import com.sorokaandriy.reservation_system.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -68,12 +69,12 @@ public class ReservationService {
         return mapToReservation(repository.save(entity));
 
     }
-
-    public void deleteReservation(Long id) {
+    @Transactional
+    public void cancelReservation(Long id, ReservationStatus canceled) {
         if (!repository.existsById(id)){
             throw new NoSuchElementException("Not found reservation by id " + id);
         }
-        repository.deleteById(id);
+        repository.setStatus(id,canceled);
 
     }
 
