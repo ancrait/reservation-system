@@ -1,15 +1,15 @@
 package com.sorokaandriy.reservation_system.exceptionHandler;
 
 import com.sorokaandriy.reservation_system.controller.ReservationController;
+import com.sorokaandriy.reservation_system.dto.ErrorResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.NoSuchElementException;
+import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -17,32 +17,47 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(ReservationController.class);
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGenericException(Exception e){
-        log.error("Handle exception: called handleGenericException()" + e);
+    public ResponseEntity<ErrorResponseDto> handleGenericException(Exception e){
+        log.error("Handle exception: called handleException()" + e);
 
+        var errorResponseDto = new ErrorResponseDto(
+                "Internal sever error",
+                        e.getMessage(),
+                        LocalDateTime.now()
+        );
         return  ResponseEntity
-                .status(500)
-                .body(e.getMessage());
+                .status(404)
+                .body(errorResponseDto);
     }
 
-    @ExceptionHandler(exception = {NoSuchElementException.class,
-                                    EntityNotFoundException.class})
-    public ResponseEntity<String> handleNoSuchEntityException(Exception e){
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleNoSuchEntityException(Exception e){
         log.error("Handle exception: called handleNoSuchEntityException" + e);
 
+        var errorResponseDto = new ErrorResponseDto(
+                "Entity not found",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+
         return ResponseEntity
                 .status(404)
-                .body(e.getMessage());
+                .body(errorResponseDto);
     }
 
 
-    @ExceptionHandler(exception = {IllegalArgumentException.class,
-            IllegalStateException.class})
-    public ResponseEntity<String> handleIllegalArgumentException(Exception e){
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(Exception e){
         log.error("Handle exception: called handleIllegalArgumentException" + e);
+
+        var errorResponseDto = new ErrorResponseDto(
+                "Invalid arguments passed",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
 
         return ResponseEntity
                 .status(404)
-                .body(e.getMessage());
+                .body(errorResponseDto);
     }
 }

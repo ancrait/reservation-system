@@ -65,7 +65,7 @@ public class ReservationService {
             throw new NoSuchElementException("Not found reservation by id " + id);
         }
         ReservationEntity entity = repository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Cant find this reservation"));
+                .orElseThrow(() -> new EntityNotFoundException("Cant find this reservation"));
         setParamsToEntity(reservation,entity);
         return mapToReservation(repository.save(entity));
 
@@ -73,7 +73,7 @@ public class ReservationService {
     @Transactional
     public void cancelReservation(Long id, ReservationStatus canceled) {
         if (!repository.existsById(id)){
-            throw new NoSuchElementException("Not found reservation by id " + id);
+            throw new EntityNotFoundException("Not found reservation by id " + id);
         }
         repository.setStatus(id,canceled);
 
