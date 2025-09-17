@@ -4,6 +4,7 @@ import com.sorokaandriy.reservation_system.dto.Reservation;
 import com.sorokaandriy.reservation_system.entity.ReservationEntity;
 import com.sorokaandriy.reservation_system.dto.ReservationStatus;
 import com.sorokaandriy.reservation_system.repository.ReservationRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,7 @@ public class ReservationService {
 
     public Reservation getReservationById(Long id) {
         ReservationEntity entity = repository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Cant find this reservation"));
+                .orElseThrow(() -> new EntityNotFoundException("Cant find this reservation"));
         return mapToReservation(entity);
     }
 
