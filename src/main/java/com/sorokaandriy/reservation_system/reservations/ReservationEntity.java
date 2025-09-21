@@ -1,6 +1,5 @@
-package com.sorokaandriy.reservation_system.entity;
+package com.sorokaandriy.reservation_system.reservations;
 
-import com.sorokaandriy.reservation_system.dto.ReservationStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

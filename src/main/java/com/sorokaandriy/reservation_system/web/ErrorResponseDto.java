@@ -1,4 +1,4 @@
-package com.sorokaandriy.reservation_system.dto;
+package com.sorokaandriy.reservation_system.web;
 
 import java.time.LocalDateTime;
 

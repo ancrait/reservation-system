@@ -1,7 +1,6 @@
-package com.sorokaandriy.reservation_system.exceptionHandler;
+package com.sorokaandriy.reservation_system.web;
 
-import com.sorokaandriy.reservation_system.controller.ReservationController;
-import com.sorokaandriy.reservation_system.dto.ErrorResponseDto;
+import com.sorokaandriy.reservation_system.reservations.ReservationController;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,7 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(ReservationController.class);
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGenericException(Exception e){

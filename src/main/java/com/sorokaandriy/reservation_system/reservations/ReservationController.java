@@ -1,8 +1,6 @@
-package com.sorokaandriy.reservation_system.controller;
+package com.sorokaandriy.reservation_system.reservations;
 
-import com.sorokaandriy.reservation_system.dto.Reservation;
-import com.sorokaandriy.reservation_system.dto.ReservationStatus;
-import com.sorokaandriy.reservation_system.service.ReservationService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -10,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/reservations")
@@ -32,22 +29,28 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> getAllReservations() {
+    public ResponseEntity<List<Reservation>> getAllReservations(
+            @RequestParam(name = "roomId",required = false) Long roomId,
+            @RequestParam(name = "userId",required = false) Long userId,
+            @RequestParam(name = "pageSize",required = false) Integer pageSize,
+            @RequestParam(name = "pageNumber",required = false) Integer pageNumber
+    ) {
         log.info("Called method getAllReservations()");
+        var filter = new ReservationSearchFilter(roomId,userId,pageSize,pageNumber);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(reservationService.findAllReservations());
+                .body(reservationService.searchAllByFilter(filter));
 
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> saveReservation(@RequestBody Reservation reservation) {
+    public ResponseEntity<Reservation> saveReservation(@RequestBody @Valid Reservation reservation) {
         log.info("Called method saveReservation()");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(reservationService.saveReservation(reservation));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Reservation> updateReservation(@PathVariable Long id, @RequestBody Reservation reservation) {
+    public ResponseEntity<Reservation> updateReservation(@PathVariable Long id, @RequestBody @Valid Reservation reservation) {
         log.info("Called method updateReservation()");
         return ResponseEntity.status(HttpStatus.OK)
                 .body(reservationService.update(id, reservation));
@@ -62,7 +65,7 @@ public class ReservationController {
 
     @PostMapping("/{id}/approve")
     public ResponseEntity<Reservation> approveReservation(@PathVariable Long id) {
-        log.info("Called method approveReservation()" + id);
+        log.info("Called method approveReservation() " + id);
         Reservation reservation = reservationService.approveReservation(id);
         return ResponseEntity.ok(reservation);
     }
