@@ -7,10 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/reservations/availability")
@@ -34,11 +31,14 @@ public class ReservationsAvailabilityController {
                 request.startDate(),
                 request.endDate()
         );
-
         var message = isAvailable ? "Room available to reservation"
                 : "Room not available to reservation";
         var status = isAvailable ? AvailabilityStatus.AVAILABLE
                 : AvailabilityStatus.RESERVED;
+        if (!isAvailable){
+            return ResponseEntity.status(404)
+                    .body(new CheckAvailabilityResponse(message, status));
+        }
         return ResponseEntity.status(200)
                 .body(new CheckAvailabilityResponse(message, status));
     }

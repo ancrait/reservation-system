@@ -103,7 +103,7 @@ public class ReservationService {
                 reservationEntity.getStartDate(),reservationEntity.getEndDate());
 
         if (!isAvailableToApprove){
-            throw new IllegalArgumentException("Cant approve reservation because of conflict");
+            throw new IllegalArgumentException("A room is already booked for this date");
         }
         reservationEntity.setReservationStatus(ReservationStatus.APPROVED);
 
